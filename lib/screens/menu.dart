@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:football_shop/screens/productlist_form.dart';
+import 'package:football_shop/widgets/left_drawer.dart'; // Import drawer dari widgets
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
-  final String nama = "Philo Pradipta Adhi Satriya"; //nama
-  final String npm = "2406495426"; //npm
-  final String kelas = "F"; //kelas
+  final String npm = '2406495426';
+  final String nama = 'Philo Pradipta Adhi Satriya';
+  final String kelas = 'F';
 
   final List<ItemHomepage> items = [
-    ItemHomepage("All Products", Icons.store, Colors.blue),
+    ItemHomepage("See Products", Icons.store, Colors.blue),
     ItemHomepage("My Products", Icons.person, Colors.green),
     ItemHomepage("Create Product", Icons.add, Colors.red),
   ];
@@ -16,6 +18,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const LeftDrawer(), // Gunakan dari widgets
       appBar: AppBar(
         title: const Text(
           'Football Shop',
@@ -31,7 +34,6 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Tampilkan info mahasiswa
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -47,7 +49,7 @@ class MyHomePage extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(top: 16.0),
                     child: Text(
-                      'Selamat datang di Football Shop!',
+                      'Selamat datang di Football Shop',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
@@ -90,10 +92,7 @@ class InfoCard extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8.0),
             Text(content),
           ],
@@ -119,15 +118,23 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: item.color, // ← warna sesuai item
+      color: item.color,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
+        borderRadius: BorderRadius.circular(12),
         onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
+          if (item.name == "Create Product") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProductFormPage()),
             );
+          } else {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
+              );
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(8),
@@ -135,11 +142,7 @@ class ItemCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
+                Icon(item.icon, color: Colors.white, size: 30.0),
                 const Padding(padding: EdgeInsets.all(3)),
                 Text(
                   item.name,
